@@ -1,7 +1,5 @@
 import os
 from pathlib import Path
-
-import rest_framework.authentication
 from decouple import config
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -41,6 +39,8 @@ THIRD_PARTY_APPS = [
     'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.github',
     'phonenumber_field',
+    'drf_yasg',
+
 ]
 
 SITE_ID = 1
@@ -138,4 +138,14 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
         'rest_framework.permissions.AllowAny',
     ]
+}
+
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'Key': {
+            'type': 'apiKey',
+            'in': 'header',
+            'name': 'Authorization'
+        }
+    },
 }
