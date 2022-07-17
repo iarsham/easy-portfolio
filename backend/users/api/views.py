@@ -18,6 +18,13 @@ class UserDetailApiView(APIView):
         serializer = UserDetailSerializer(self.get_object())
         return Response(serializer.data, status.HTTP_200_OK)
 
+
+class UserUpdateApiView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get_object(self):
+        return self.request.user
+
     def put(self, request, *args, **kwargs):
         serializer = UserUpdateSerializer(self.get_object(), data=request.data)
         if serializer.is_valid(raise_exception=True):
@@ -25,6 +32,13 @@ class UserDetailApiView(APIView):
             return Response(serializer.data, status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
+
+
+class UserDeleteApiView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get_object(self):
+        return self.request.user
 
     def delete(self, request, *args, **kwargs):
         user = self.get_object()
