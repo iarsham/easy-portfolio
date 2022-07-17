@@ -8,7 +8,6 @@ from .models import User
 class UserAdmin(UserAdmin):
     list_display = ('email', 'is_superuser')
     fieldsets = UserAdmin.fieldsets + (
-        (_("Extra info"), {"fields": ("phone_number", "socials", "updated")}),
+        (_("Extra info"), {"fields": ("updated",)}),
     )
     readonly_fields = ("updated",)
-
