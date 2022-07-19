@@ -9,6 +9,7 @@ defusedxml==0.7.1
 dj-rest-auth==2.2.4
 Django==4.0.6
 django-allauth==0.50.0
+django-debug-toolbar==3.5.0
 django-phonenumber-field==6.3.0
 djangorestframework==3.13.1
 drf-yasg==1.21.0

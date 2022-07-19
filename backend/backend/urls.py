@@ -24,6 +24,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('users.urls', namespace='user')),
     path('', include('portfolio.urls', namespace='portfolio')),
+    path('__debug__/', include('debug_toolbar.urls')),
 
     path('api/password_reset/',
          PasswordResetView.as_view(), name='password_reset'),
