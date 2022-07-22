@@ -1,0 +1,65 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres:latest
+    container_name: db
+    restart: always
+    volumes:
+      - ./db_data:/var/lib/postgresql/data
+    networks:
+      - backend_network
+    expose:
+      - 5432
+    env_file:
+      - backend/.env-sample
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: backend
+    restart: always
+    volumes:
+      - ./backend:/code
+    networks:
+      - backend_network
+      - nginx_network
+    expose:
+      - 8000
+    depends_on:
+      - db
+    env_file:
+      - backend/.env-sample
+
+  nginx:
+    build:
+      context: ./backend/nginx/
+      dockerfile: Dockerfile
+    container_name: nginx
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - type: bind
+        source: ./backend/static/
+        target: /code/static
+      - type: bind
+        source: ./backend/media/
+        target: /code/media
+    networks:
+      - nginx_network
+    depends_on:
+      - db
+      - backend
+
+volumes:
+  db_data:
+    external: True
+
+
+networks:
+  nginx_network:
+    external: True
+  backend_network:
+    external: True
