@@ -10,7 +10,6 @@ class UserUpdateSerializer(serializers.ModelSerializer):
 
 
 class UserDetailSerializer(serializers.ModelSerializer):
-    full_name = serializers.SerializerMethodField()
     verify = serializers.SerializerMethodField()
 
     class Meta:

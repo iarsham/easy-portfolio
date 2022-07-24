@@ -41,7 +41,7 @@ THIRD_PARTY_APPS = [
     'phonenumber_field',
     'drf_yasg',
     "debug_toolbar",
-
+    "corsheaders",
 ]
 
 SITE_ID = 1
@@ -51,6 +51,7 @@ INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -160,3 +161,26 @@ SWAGGER_SETTINGS = {
     },
     'LOGIN_URL': 'users:api:login',
 }
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        }
+    },
+    'github': {
+        'SCOPE': [
+            'user',
+            'repo',
+            'read:org',
+        ],
+    }
+}
+
+CORS_ORIGIN_ALLOW_ALL = True
+
+CALLBACK_URL_GITHUB = config('CALLBACK_URL_GOOGLE')
+CALLBACK_URL_GOOGLE = config('CALLBACK_URL_GITHUB')

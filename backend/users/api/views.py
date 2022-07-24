@@ -1,8 +1,13 @@
+from django.conf import settings
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
 from rest_framework.views import APIView, status, Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.models import Token
+from dj_rest_auth.registration.views import SocialLoginView
+from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
+from allauth.socialaccount.providers.github.views import GitHubOAuth2Adapter
+from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from .serializers import UserDetailSerializer, UserUpdateSerializer
 
 User = get_user_model()
@@ -53,3 +58,15 @@ class RevokeApiKeyView(APIView):
         user = self.request.user
         old, new = get_object_or_404(Token, user=user).delete(), Token.objects.create(user=user)
         return Response({"key is revoked": new.key}, status.HTTP_201_CREATED)
+
+
+class GoogleLoginApiView(SocialLoginView):
+    adapter_class = GoogleOAuth2Adapter
+    client_class = OAuth2Client
+    callback_url = settings.CALLBACK_URL_GOOGLE
+
+
+class GithubLoginApiView(SocialLoginView):
+    adapter_class = GitHubOAuth2Adapter
+    client_class = OAuth2Client
+    callback_url = settings.CALLBACK_URL_GITHUB
