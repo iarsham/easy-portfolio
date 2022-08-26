@@ -2,6 +2,7 @@ import os
 import sys
 from pathlib import Path
 from decouple import config, Csv
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config("SECRET_KEY")
 DEBUG = config("DEBUG", cast=bool)
@@ -123,6 +124,8 @@ EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
 
 REST_FRAMEWORK = {
+    'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.NamespaceVersioning',
+    'DATETIME_FORMAT': "%Y-%m-%dT%H:%M:%S",
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'apps.extensions.authentication.ApiKeyAuthentication'
     ],
@@ -142,8 +145,9 @@ SWAGGER_SETTINGS = {
             'name': 'Authorization'
         }
     },
-    'LOGIN_URL': 'users:api:login',
+    'LOGIN_URL': 'config:login',
 }
+
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'SCOPE': [

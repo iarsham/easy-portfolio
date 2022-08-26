@@ -6,8 +6,14 @@ from apps.extensions.models import AbstractTime
 
 
 class User(AbstractUser, AbstractTime):
-    id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True, editable=False)
-    email = models.EmailField(_("email address"), unique=True, null=False, blank=True)
+    id = models.UUIDField(
+        default=uuid.uuid4, unique=True,
+        primary_key=True, editable=False
+    )
+    email = models.EmailField(
+        verbose_name=_("email address"), unique=True,
+        null=False, blank=True
+    )
     created = None
 
     USERNAME_FIELD = 'email'

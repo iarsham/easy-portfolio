@@ -1,23 +1,23 @@
 from django.urls import path
-from dj_rest_auth.registration.views import RegisterView, LoginView
-from dj_rest_auth.views import LogoutView, PasswordChangeView
-from .views import (
-    UserDetailApiView, RevokeApiKeyView,
-    UserUpdateApiView, UserDeleteApiView,
-    GoogleLoginApiView, GithubLoginApiView
+from apps.users.api.views import (
+    UserGetPatchDeleteApiView, FetchApiKey
 )
 
-app_name = 'api'
+USER_ENDPOINTS = {
+    "get": "retrieve_user",
+    "patch": "update_user",
+    "delete": "delete_user",
+}
+
+app_name = 'users'
 
 urlpatterns = [
-    path('register/', RegisterView.as_view(), name='signup'),
-    path('login/', LoginView.as_view(), name='login'),
-    path('login/google/', GoogleLoginApiView.as_view(), name='login_google'),
-    path('login/github/', GithubLoginApiView.as_view(), name='login_github'),
-    path('logout/', LogoutView.as_view(), name='logout'),
-    path('password_change/', PasswordChangeView.as_view(), name='password_change'),
-    path('user/', UserDetailApiView.as_view(), name='user_detail'),
-    path('user/update/', UserUpdateApiView.as_view(), name='user_update'),
-    path('user/delete/', UserDeleteApiView.as_view(), name='user_delete'),
-    path('revoke_key/', RevokeApiKeyView.as_view(), name='revoke_key'),
+    path(
+        'user/',
+        UserGetPatchDeleteApiView.as_view(USER_ENDPOINTS),
+        name='user_rud'
+    ),
+    path('user/key/', FetchApiKey.as_view(), name='user_key')
+
 ]
+

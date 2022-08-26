@@ -15,8 +15,8 @@ class UserDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
         fields = (
-            'id', 'username',
-            'email', 'verify',
+            'username', 'email',
+            'verify', 'updated',
         )
 
     def get_verify(self, obj):
