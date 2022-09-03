@@ -24,34 +24,41 @@ class AboutMe(AbstractTime):
         verbose_name=_("First Name"),
         max_length=150,
         null=True,
+        blank=True,
     )
     last_name = models.CharField(
         verbose_name=_("Last Name"),
         max_length=150,
         null=True,
+        blank=True,
     )
     location = models.CharField(
         verbose_name=_("Location"),
         max_length=150,
         null=True,
+        blank=True,
     )
     job_title = models.CharField(
         verbose_name=_("Job Title"),
         max_length=150,
         null=True,
+        blank=True,
     )
     summery = models.TextField(
         verbose_name=_("Summery"),
         null=True,
+        blank=True,
     )
     phone_number = PhoneNumberField(
         verbose_name=_("Phone Number"),
         unique=True,
         null=True,
+        blank=True,
     )
     resume = models.FileField(
         verbose_name=_("Resume"),
-        null=False,
+        null=True,
+        blank=True,
         upload_to=upload_file_path,
         validators=[
             validate_file_size,
@@ -62,8 +69,9 @@ class AboutMe(AbstractTime):
     )
     social_accounts = models.JSONField(
         verbose_name=_("Social Account"),
-        default=list,
+        default=[],
         null=True,
+        blank=True,
     )
 
     class Meta:
@@ -102,32 +110,39 @@ class Education(models.Model):
         verbose_name=_("Institute"),
         max_length=150,
         null=True,
+        blank=True,
     )
     field_study = models.CharField(
         verbose_name=_("Field of study"),
         max_length=100,
         null=True,
+        blank=True,
     )
     degree = models.CharField(
         verbose_name=_("Degree"),
         max_length=150,
         null=True,
+        blank=True,
     )
     grade = models.PositiveSmallIntegerField(
         verbose_name=_("Grade"),
         null=True,
+        blank=True,
     )
     description = models.TextField(
         verbose_name=_("Description"),
         null=True,
+        blank=True,
     )
     start_time = models.DateField(
         verbose_name=_("Start learing"),
         null=True,
+        blank=True,
     )
     finish_time = models.DateField(
         verbose_name=_("Finish learing"),
         null=True,
+        blank=True,
     )
 
     class Meta:
