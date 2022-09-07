@@ -69,7 +69,7 @@ class AboutMe(AbstractTime):
     )
     social_accounts = models.JSONField(
         verbose_name=_("Social Account"),
-        default=[],
+        default=list,
         null=True,
         blank=True,
     )
