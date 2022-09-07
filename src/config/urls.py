@@ -20,6 +20,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/', include('apps.users.api.urls', namespace="users_v1")),
     path('api/v1/', include('apps.portfolio.api.urls', namespace="portfolio_v1")),
+    path('api/v1/', include('apps.experience.api.urls', namespace="experience_v1")),
     path('api/v1/', include('config.dj_urls', namespace='dj_auth_v1')),
 
     re_path(r'^swagger/$',

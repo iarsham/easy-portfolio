@@ -22,6 +22,7 @@ DJANGO_APPS = [
 
 LOCAL_APPS = [
     'apps.users.apps.UsersConfig',
+    'apps.experience.apps.ExperienceConfig',
     'apps.portfolio.apps.PortfolioConfig',
     'apps.extensions.apps.ExtensionsConfig',
 ]

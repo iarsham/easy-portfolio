@@ -39,3 +39,14 @@ class AbstractCertificate(models.Model):
 
     class Meta:
         abstract = True
+
+
+class AbstractFile(models.Model):
+    file = models.FileField(
+        verbose_name=_("File"),
+        null=False,
+        upload_to=upload_file_path,
+    )
+
+    class Meta:
+        abstract = True
