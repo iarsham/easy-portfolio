@@ -1,8 +1,10 @@
 from django.shortcuts import get_object_or_404
-from rest_framework import mixins, generics
+from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import PermissionDenied
-from apps.portfolio.api.views import BaseViewSetMixin
+from apps.extensions.inheritances import (
+    BaseViewSetMixin, BaseUpdateDeleteMixin, BlogPagination
+)
 from apps.experience.permissions import (
     IsAuthenticatedAndOwner, IsProjectOwner,
     IsProjectAssetsOwner, IsPersonalProjectOwner,
@@ -10,23 +12,12 @@ from apps.experience.permissions import (
 from apps.experience.models import (
     Experience, Project, ProjectAssets,
     PersonalProject, PersonalProjectAssets,
-    ReferencePeople
+    ReferencePeople, Blog
 )
 from apps.experience.api.serializers import (
-    ExperienceSerializer, ProjectSerializer,
+    ExperienceSerializer, ProjectSerializer, BlogSerializer,
     ReferencePeopleSerializer, PersonalProjectSerializer
 )
-
-
-class BaseUpdateDeleteMixin(mixins.UpdateModelMixin,
-                            mixins.DestroyModelMixin,
-                            generics.GenericAPIView):
-
-    def patch(self, request, *args, **kwargs):
-        return self.partial_update(request, *args, **kwargs)
-
-    def delete(self, request, *args, **kwargs):
-        return self.destroy(request, *args, **kwargs)
 
 
 class ExperienceCRUDApiView(BaseViewSetMixin):
@@ -37,11 +28,6 @@ class ExperienceCRUDApiView(BaseViewSetMixin):
         return Experience.objects.filter(
             user=self.request.user
         ).order_by('-start_date')
-
-    def get_object(self):
-        obj = get_object_or_404(Experience, id=self.kwargs['pk'])
-        self.check_object_permissions(self.request, obj)
-        return obj
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
@@ -98,11 +84,6 @@ class ReferencePeopleCRUDApiView(BaseViewSetMixin):
     def get_queryset(self):
         return ReferencePeople.objects.filter(user=self.request.user)
 
-    def get_object(self):
-        obj = get_object_or_404(ReferencePeople, id=self.kwargs['pk'])
-        self.check_object_permissions(self.request, obj)
-        return obj
-
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
@@ -114,22 +95,22 @@ class PersonalProjectCRUDApiView(BaseViewSetMixin):
     def get_queryset(self):
         return PersonalProject.objects.filter(user=self.request.user)
 
-    def get_object(self):
-        obj = get_object_or_404(PersonalProject, id=self.kwargs['pk'])
-        self.check_object_permissions(self.request, obj)
-        return obj
-
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
 
 class PersonalProjectAssetsDeleteApiView(generics.DestroyAPIView):
+    queryset = PersonalProjectAssets.objects.all()
     permission_classes = (IsPersonalProjectOwner,)
 
-    def get_object(self):
-        obj = get_object_or_404(
-            PersonalProjectAssets,
-            id=self.kwargs['pk']
-        )
-        self.check_object_permissions(self.request, obj)
-        return obj
+
+class BlogCRUDApiView(BaseViewSetMixin):
+    serializer_class = BlogSerializer
+    pagination_class = BlogPagination
+    permission_classes = (IsAuthenticatedAndOwner,)
+
+    def get_queryset(self):
+        return Blog.objects.filter(user=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)

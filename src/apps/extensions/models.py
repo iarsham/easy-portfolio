@@ -16,7 +16,7 @@ class AbstractTime(models.Model):
 class AbstractImage(models.Model):
     image = models.ImageField(
         verbose_name=_("Image"),
-        null=False,
+        null=True,
         upload_to=upload_file_path,
         validators=[
             validate_file_size,
@@ -33,7 +33,8 @@ class AbstractImage(models.Model):
 class AbstractCertificate(models.Model):
     certificate = models.FileField(
         verbose_name=_("Certificate"),
-        null=False,
+        null=True,
+        blank=True,
         upload_to=upload_file_path,
     )
 

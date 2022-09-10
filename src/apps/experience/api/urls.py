@@ -4,13 +4,14 @@ from apps.experience.api.views import (
     ExperienceCRUDApiView, ProjectCreateReadApiView,
     ProjectUpdateDeleteApiView, ReferencePeopleCRUDApiView,
     PersonalProjectCRUDApiView, ProjectAssetsDeleteApiView,
-    PersonalProjectAssetsDeleteApiView
+    PersonalProjectAssetsDeleteApiView, BlogCRUDApiView
 )
 
 router = DefaultRouter()
 router.register("experience", ExperienceCRUDApiView, "experience")
 router.register("reference", ReferencePeopleCRUDApiView, "reference")
 router.register("personal_project", PersonalProjectCRUDApiView, "personal_project")
+router.register("blog", BlogCRUDApiView, "blog")
 
 app_name = "experience"
 

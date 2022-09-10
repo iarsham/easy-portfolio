@@ -4,7 +4,7 @@ from dateutil.relativedelta import relativedelta
 from apps.experience.models import (
     Experience, Project, ProjectAssets,
     PersonalProject, PersonalProjectAssets,
-    ReferencePeople
+    ReferencePeople, Blog
 )
 
 
@@ -130,3 +130,9 @@ class PersonalProjectSerializer(serializers.ModelSerializer):
             )
         PersonalProjectAssets.objects.bulk_create(assets_obj_list)
         return super().update(instance, validated_data)
+
+
+class BlogSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Blog
+        exclude = ("user",)

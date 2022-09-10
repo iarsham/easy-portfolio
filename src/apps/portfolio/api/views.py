@@ -2,11 +2,11 @@ from django.shortcuts import get_object_or_404
 from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.views import Response, status, APIView
-from rest_framework.viewsets import GenericViewSet, mixins
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import NotFound
 from apps.portfolio.constants import PROFICIENCY_STATUS, EMPLOYMENT_STATUS
+from apps.extensions.inheritances import BaseViewSetMixin
 from apps.portfolio.permissions import (
     IsLanguageCertificateOwner, IsAchievementCertificateOwner,
     IsSkillCertificateOwner
@@ -21,22 +21,6 @@ from apps.portfolio.api.serializers import (
     SkillSerializer, AchievementSerializer, ContactMeSerializer
 )
 from apps.portfolio.tasks import send_contact_me_mail
-
-
-class BaseViewSetMixin(mixins.ListModelMixin,
-                       mixins.CreateModelMixin,
-                       mixins.UpdateModelMixin,
-                       mixins.DestroyModelMixin,
-                       GenericViewSet):
-    http_method_names = ['get', 'post', 'patch', 'delete']
-
-    def perform_create(self, serializer):
-        serializer.save(about_me=self.get_object())
-
-    def get_serializer_context(self):
-        context = super().get_serializer_context()
-        context['request'] = self.request
-        return context
 
 
 class AboutMeGetUpdateApiView(generics.RetrieveUpdateAPIView):

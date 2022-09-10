@@ -237,3 +237,38 @@ class PersonalProjectAssets(AbstractFile):
 
     def __str__(self):
         return f"{self.personal_project}"
+
+
+class Blog(AbstractImage):
+    user = models.ForeignKey(
+        verbose_name=_("User"),
+        to=User,
+        on_delete=models.CASCADE,
+        related_name='blog_user'
+    )
+    title = models.CharField(
+        verbose_name=_("Title"),
+        max_length=200,
+        null=False
+    )
+    description = models.TextField(
+        verbose_name=_("Description"),
+        null=False
+    )
+    link = models.URLField(
+        verbose_name=_("Link"),
+        max_length=200,
+        null=False
+    )
+    writen_date = models.DateField(
+        verbose_name=_("Writen Date"),
+        null=True,
+        blank=True,
+    )
+
+    class Meta:
+        verbose_name = _("Blog")
+        verbose_name_plural = _("Blogs")
+
+    def __str__(self):
+        return f"{self.user.username} - {self.title}"
