@@ -12,16 +12,15 @@ from apps.portfolio.permissions import (
     IsSkillCertificateOwner
 )
 from apps.portfolio.models import (
-    AboutMe, AboutMeProfile, Education,
-    Skill, SkillCertificate,
-    Language, LanguageCertificate,
-    Achievement, AchievementCertificate
+    AboutMe, AboutMeProfile, Education, Skill,
+    SkillCertificate, Language, LanguageCertificate,
+    Achievement, AchievementCertificate, ContactMe
 )
 from apps.portfolio.api.serializers import (
-    AboutMeSerializer, LanguageSerializer,
-    EducationSerializer, SkillSerializer,
-    AchievementSerializer,
+    AboutMeSerializer, LanguageSerializer, EducationSerializer,
+    SkillSerializer, AchievementSerializer, ContactMeSerializer
 )
+from apps.portfolio.tasks import send_contact_me_mail
 
 
 class BaseViewSetMixin(mixins.ListModelMixin,
@@ -179,3 +178,25 @@ class EmploymentChoicesApiView(APIView):
     def get(self, request, *args, **kwargs):
         choices = [choice[0] for choice in EMPLOYMENT_STATUS]
         return Response({"response": choices}, status=status.HTTP_200_OK)
+
+
+class SendContactMeApiView(generics.CreateAPIView):
+    queryset = ContactMe.objects.all()
+    permission_classes = (IsAuthenticated,)
+    serializer_class = ContactMeSerializer
+
+    def create(self, request, *args, **kwargs):
+        data = request.data
+        serializer = self.get_serializer(data=data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save(user=self.request.user)
+            send_contact_me_mail.delay(
+                message=data['message'], email=data['email'],
+                user_email=request.user.email,
+                name=data['name'], subject=data['subject'],
+            )
+            return Response(
+                {"response": "message was sent!"},
+                status=status.HTTP_200_OK
+            )
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

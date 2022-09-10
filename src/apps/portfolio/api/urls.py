@@ -5,7 +5,7 @@ from apps.portfolio.api.views import (
     EducationGetUpdateApiView, SkillCRUDApiView, SkillDeleteCertificateApiView,
     LanguageCRUDApiView, LanguageDeleteCertificateApiView,
     AchievementCRUDApiView, AchievementDeleteCertificateApiView,
-    EmploymentChoicesApiView, ProficiencyChoicesApiView
+    EmploymentChoicesApiView, ProficiencyChoicesApiView, SendContactMeApiView
 )
 
 router = DefaultRouter()
@@ -47,7 +47,8 @@ urlpatterns = [
         name='achievement_delete_certificate'
     ),
     path('proficiency/', ProficiencyChoicesApiView.as_view()),
-    path('employment/', EmploymentChoicesApiView.as_view())
+    path('employment/', EmploymentChoicesApiView.as_view()),
+    path('contactme/', SendContactMeApiView.as_view(), name='contact_me')
 
 ]
 urlpatterns += router.urls

@@ -263,3 +263,37 @@ class AchievementCertificate(AbstractCertificate):
 
     def __str__(self):
         return f"{self.achievement.about_me.user.username} - certificates"
+
+
+class ContactMe(AbstractTime):
+    user = models.ForeignKey(
+        verbose_name=_("User"),
+        to=User,
+        on_delete=models.CASCADE,
+        related_name='user_contact_me'
+    )
+    name = models.CharField(
+        verbose_name=_("Name"),
+        max_length=150,
+        null=False
+    )
+    email = models.EmailField(
+        verbose_name=_("Email"),
+        null=False
+    )
+    subject = models.CharField(
+        verbose_name=_("Subject"),
+        max_length=300,
+        null=False
+    )
+    message = models.TextField(
+        verbose_name=_("Message"),
+        null=False
+    )
+
+    class Meta:
+        verbose_name = _("ContactMe")
+        verbose_name_plural = _("ContactMe")
+
+    def __str__(self):
+        return f"{self.user.username} - {self.email}"

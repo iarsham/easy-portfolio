@@ -2,11 +2,11 @@ from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from apps.portfolio.models import (
-    AboutMe, Education,
-    Skill, SkillCertificate,
+    AboutMe, Education, Skill, SkillCertificate,
     AboutMeProfile, Language, LanguageCertificate,
-    Achievement, AchievementCertificate
+    Achievement, AchievementCertificate, ContactMe
 )
+from apps.portfolio.tasks import send_contact_me_mail
 
 
 class AboutMeProfileSerializer(serializers.ModelSerializer):
@@ -222,3 +222,9 @@ class AchievementSerializer(serializers.ModelSerializer):
             )
         AchievementCertificate.objects.bulk_create(certificate_obj_list)
         return super().update(instance, validated_data)
+
+
+class ContactMeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ContactMe
+        exclude = ('user', 'created', 'updated')
