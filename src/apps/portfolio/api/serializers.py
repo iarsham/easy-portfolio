@@ -6,7 +6,6 @@ from apps.portfolio.models import (
     AboutMeProfile, Language, LanguageCertificate,
     Achievement, AchievementCertificate, ContactMe
 )
-from apps.portfolio.tasks import send_contact_me_mail
 
 
 class AboutMeProfileSerializer(serializers.ModelSerializer):
@@ -48,9 +47,28 @@ class AboutMeSerializer(serializers.ModelSerializer):
 
 
 class EducationSerializer(serializers.ModelSerializer):
+    is_finished = serializers.ReadOnlyField()
+
     class Meta:
         model = Education
-        exclude = ("id", "about_me")
+        exclude = ('id', 'about_me')
+        extra_kwargs = {'start_time': {'required': True}}
+
+    def validate(self, attrs):
+        finish_time = attrs.get('finish_time', None)
+        if finish_time is not None and finish_time <= attrs['start_time']:
+            raise ValidationError(
+                _("The end date cannot be less than the start date")
+            )
+        return attrs
+
+    def to_representation(self, instance):
+        context = super().to_representation(instance)
+        if not self.instance.finish_time:
+            context['status'] = "until now"
+            return context
+        context['status'] = "finished"
+        return context
 
 
 class SkillCertificateSerializer(serializers.ModelSerializer):
@@ -75,10 +93,10 @@ class SkillSerializer(serializers.ModelSerializer):
 
     def validate_name(self, data):
         request = self.context['request']
-        if Skill.objects.filter(
+        if request.method == "POST" and Skill.objects.filter(
                 about_me__user=request.user,
                 name__icontains=data
-        ).exists() and request.method == "POST":
+        ).exists():
             raise ValidationError(_("This skill already exists"))
         return data
 
@@ -125,10 +143,10 @@ class LanguageSerializer(serializers.ModelSerializer):
 
     def validate_name(self, data):
         request = self.context['request']
-        if Language.objects.filter(
+        if request.method == "POST" and Language.objects.filter(
                 about_me__user=request.user,
                 name__icontains=data
-        ).exists() and request.method == "POST":
+        ).exists():
             raise ValidationError(_("This language already exists"))
         return data
 
@@ -189,10 +207,10 @@ class AchievementSerializer(serializers.ModelSerializer):
 
     def validate_name(self, data):
         request = self.context['request']
-        if Achievement.objects.filter(
+        if request.method == "POST" and Achievement.objects.filter(
                 about_me__user=request.user,
                 title__icontains=data
-        ).exists() and request.method == "POST":
+        ).exists():
             raise ValidationError(_("This achievement already exists"))
         return data
 

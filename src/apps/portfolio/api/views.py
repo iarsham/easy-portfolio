@@ -26,7 +26,7 @@ from apps.portfolio.tasks import send_contact_me_mail
 class AboutMeGetUpdateApiView(generics.RetrieveUpdateAPIView):
     serializer_class = AboutMeSerializer
     permission_classes = (IsAuthenticated,)
-    http_method_names = ['get', 'patch']
+    http_method_names = ['get', 'put']
 
     def get_object(self):
         return get_object_or_404(AboutMe, user=self.request.user)
@@ -47,7 +47,7 @@ class AboutMeDeleteProfileApiView(generics.DestroyAPIView):
 class EducationGetUpdateApiView(generics.RetrieveUpdateAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = EducationSerializer
-    http_method_names = ['get', 'patch']
+    http_method_names = ['get', 'put']
 
     def get_object(self):
         obj_about_me = get_object_or_404(AboutMe, user=self.request.user)
