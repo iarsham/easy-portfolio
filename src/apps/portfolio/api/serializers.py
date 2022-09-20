@@ -47,8 +47,6 @@ class AboutMeSerializer(serializers.ModelSerializer):
 
 
 class EducationSerializer(serializers.ModelSerializer):
-    is_finished = serializers.ReadOnlyField()
-
     class Meta:
         model = Education
         exclude = ('id', 'about_me')
@@ -64,11 +62,14 @@ class EducationSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         context = super().to_representation(instance)
-        if not self.instance.finish_time:
+        if instance.start_time is not None and not instance.finish_time:
             context['status'] = "until now"
             return context
-        context['status'] = "finished"
-        return context
+        elif instance.start_time and instance.finish_time:
+            context['status'] = "finished"
+            return context
+        else:
+            return context
 
 
 class SkillCertificateSerializer(serializers.ModelSerializer):

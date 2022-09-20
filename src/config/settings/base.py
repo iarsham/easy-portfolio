@@ -142,6 +142,11 @@ REST_FRAMEWORK = {
         'anon': '25/hour',
         'user': '150/hour'
     },
+    'TEST_REQUEST_DEFAULT_FORMAT': 'json',
+    'TEST_REQUEST_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.MultiPartRenderer',
+    ]
 }
 
 CALLBACK_URL_GITHUB = config('CALLBACK_URL_GOOGLE')
@@ -183,4 +188,3 @@ CELERY_TIMEZONE = config('CELERY_TIMEZONE')
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
-

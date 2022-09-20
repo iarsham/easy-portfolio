@@ -27,12 +27,11 @@ class UserGetPatchDeleteApiView(ModelViewSet):
         serializer = self.get_serializer(instance=self.get_object())
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
-    @action(detail=False, methods=["patch"])
+    @action(detail=False, methods=["put"])
     def update_user(self, request):
         serializer = self.get_serializer(
             instance=self.get_object(),
             data=request.data,
-            partial=True
         )
         if serializer.is_valid(raise_exception=True):
             serializer.save()
