@@ -28,7 +28,7 @@ class Experience(AbstractTime):
         max_length=100,
         null=False,
     )
-    Employment_type = models.CharField(
+    employment_type = models.CharField(
         verbose_name=_("Employment_type"),
         max_length=20,
         choices=EMPLOYMENT_STATUS,

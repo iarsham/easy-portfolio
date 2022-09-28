@@ -1,7 +1,9 @@
+import tempfile
+from PIL import Image
+from os.path import basename, splitext
 from datetime import datetime
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
-from os.path import basename, splitext
 
 
 def filename_extract(file):
@@ -23,3 +25,10 @@ def validate_file_size(value):
             _("You cannot upload file more than 2Mb")
         )
     return value
+
+
+def create_test_image():
+    image = Image.new('RGB', (100, 100))
+    tmp_file = tempfile.NamedTemporaryFile(suffix='.jpg')
+    image.save(tmp_file)
+    return tmp_file

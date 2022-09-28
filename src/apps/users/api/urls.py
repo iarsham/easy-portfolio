@@ -5,7 +5,7 @@ from apps.users.api.views import (
 
 USER_ENDPOINTS = {
     "get": "retrieve_user",
-    "patch": "update_user",
+    "put": "update_user",
     "delete": "delete_user",
 }
 
