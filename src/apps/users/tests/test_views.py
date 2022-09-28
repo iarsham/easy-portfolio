@@ -1,10 +1,10 @@
 from django.urls import reverse
 from rest_framework import status
-from apps.extensions.inheritances import GerneralApiTestCase
+from apps.extensions.test_setup import GeneralApiTestCase
 from apps.users.api.serializers import UserDetailSerializer
 
 
-class UsersViewApiTest(GerneralApiTestCase):
+class UsersViewApiTest(GeneralApiTestCase):
 
     def setUp(self):
         self.user_path = reverse('users:user_rud')

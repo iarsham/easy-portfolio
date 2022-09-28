@@ -2,42 +2,12 @@ import json
 from django.urls import reverse
 from django.test.client import MULTIPART_CONTENT, encode_multipart
 from rest_framework import status
-from apps.extensions.inheritances import GerneralApiTestCase
+from apps.extensions.test_setup import ExperienceApiTestCase
 from apps.experience.models import Project, ReferencePeople
 from apps.extensions.utils import create_test_image
 
 
-class ExperienceViewsApiTest(GerneralApiTestCase):
-    def setUp(self):
-        super().setUp()
-        self.experience = self.user1.experience_user.create(
-            role="Python Backend Developer",
-            Employment_type="full-time",
-            company_name="Booking.com",
-            start_date="2018-02-01",
-            still_working=True
-        )
-        self.project = self.experience.experience_project.create(
-            name="Portfolio Backend Api",
-            description='an open source api project with Django & Drf',
-            stacks=[{"stack1": "python", "stack2": "postgres"}]
-        )
-        self.reference = self.user2.reference_user.create(
-            full_name='Guido van Rossum',
-            email='Guido1987@email.com',
-            linkedin='https://www.linkedin.com/in/guido-van-rossum-4a0756',
-            recommendation='Lorem Ipsum is simply dummy text of the printing'
-        )
-        self.blog = self.user3.blog_user.create(
-            title='Commit Like a Pro',
-            description='Committing changes is one of the common things that',
-            link='https://imsadra.me/commit-like-a-pro'
-        )
-        self.personal_project = self.user1.personal_user.create(
-            name='RestApi-Blog',
-            stacks=[{'stack1': 'python', 'stack2': 'django'}],
-            description='Blog Project With Django and Drf',
-        )
+class ExperienceViewsApiTest(ExperienceApiTestCase):
 
     def test_retrieve_experience_data(self):
         self.client.credentials(HTTP_AUTHORIZATION=f"api-key {self.token1}")
@@ -50,7 +20,7 @@ class ExperienceViewsApiTest(GerneralApiTestCase):
         self.client.credentials(HTTP_AUTHORIZATION=f"api-key {self.token1}")
         payload = {
             'role': "Python Backend Developer Edited",
-            'Employment_type': 'full-time',
+            'employment_type': 'full-time',
             'company_name': 'Booking.com',
             'start_date': '2018-02-01',
             'still_working': True

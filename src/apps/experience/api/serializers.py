@@ -1,5 +1,4 @@
 import datetime
-from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
 from dateutil.relativedelta import relativedelta
@@ -77,15 +76,10 @@ class ProjectSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         request = self.context['request']
         if request.method == "POST" and Project.objects.filter(
-                Q(experience__user=request.user,
-                  name__icontains=attrs.get('name'))
-                &
-                Q(experience__user=request.user,
-                  link__iexact=attrs.get('link'))
+                experience__user=request.user,
+                name__icontains=attrs['name']
         ).exists():
-            raise serializers.ValidationError(
-                'project with this name and link exists.'
-            )
+            raise serializers.ValidationError('project with this name exists.')
         return attrs
 
     def get_assets(self, obj):
@@ -121,11 +115,8 @@ class ReferencePeopleSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         request = self.context['request']
         if request.method == "POST" and ReferencePeople.objects.filter(
-                Q(user=request.user,
-                  full_name__icontains=attrs['full_name'])
-                &
-                Q(user=request.user,
-                  email__icontains=attrs['email'])
+                full_name__icontains=attrs['full_name'],
+                email__icontains=attrs['email'],
         ).exists():
             raise serializers.ValidationError(
                 'someone with this full_name and email exists.'

@@ -206,7 +206,7 @@ class AchievementSerializer(serializers.ModelSerializer):
             context={"request": self.context['request']}
         ).data
 
-    def validate_name(self, data):
+    def validate_title(self, data):
         request = self.context['request']
         if request.method == "POST" and Achievement.objects.filter(
                 about_me__user=request.user,

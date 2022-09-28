@@ -1,39 +1,12 @@
 from django.urls import reverse
 from django.test.client import MULTIPART_CONTENT, encode_multipart
 from rest_framework import status
-from apps.extensions.inheritances import GerneralApiTestCase
+from apps.extensions.test_setup import PortfolioApiTestCase
 from apps.extensions.utils import create_test_image
-from apps.portfolio.models import AboutMe, Skill, Language, Achievement
+from apps.portfolio.models import Skill
 
 
-class PortfolioViewsApiTest(GerneralApiTestCase):
-
-    def setUp(self):
-        super().setUp()
-        self.aboutme = AboutMe.objects.get(user=self.user1)
-        self.aboutme2 = AboutMe.objects.get(user=self.user2)
-        self.aboutme3 = AboutMe.objects.get(user=self.user3)
-        self.aboutme_profile = self.aboutme.aboutme_profile.create()
-
-        self.skill = Skill.objects.create(
-            name='python',
-            about_me=self.aboutme,
-        )
-        self.skill_certificate = self.skill.skill_certificate.create()
-
-        self.language = Language.objects.create(
-            name='Germany',
-            proficiency='elementary',
-            about_me=self.aboutme2,
-        )
-        self.language_certificate = self.language.language_certificate.create()
-
-        self.achievement = Achievement.objects.create(
-            title='django-achievements - Django App for user',
-            description='Lorem Ipsum is simply dummy text of the printing ...',
-            about_me=self.aboutme3,
-        )
-        self.achievement_certificate = self.achievement.achievement_certificate.create()
+class PortfolioViewsApiTest(PortfolioApiTestCase):
 
     def test_retrieve_about_me_data(self):
         self.client.credentials(HTTP_AUTHORIZATION=f"api-key {self.token1}")
