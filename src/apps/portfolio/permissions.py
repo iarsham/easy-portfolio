@@ -1,7 +1,7 @@
-from rest_framework.permissions import BasePermission
+from rest_framework.permissions import IsAuthenticated
 
 
-class IsSkillCertificateOwner(BasePermission):
+class IsSkillCertificateOwner(IsAuthenticated):
 
     def has_object_permission(self, request, view, obj):
         return bool(
@@ -9,7 +9,7 @@ class IsSkillCertificateOwner(BasePermission):
         )
 
 
-class IsLanguageCertificateOwner(BasePermission):
+class IsLanguageCertificateOwner(IsAuthenticated):
 
     def has_object_permission(self, request, view, obj):
         return bool(
@@ -17,7 +17,7 @@ class IsLanguageCertificateOwner(BasePermission):
         )
 
 
-class IsAchievementCertificateOwner(BasePermission):
+class IsAchievementCertificateOwner(IsAuthenticated):
 
     def has_object_permission(self, request, view, obj):
         return bool(
