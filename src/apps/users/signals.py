@@ -20,3 +20,5 @@ def update_email_verification(sender, instance, created, **kwargs):
         email_address_obj = EmailAddress.objects.get(user=instance)
         email_address_obj.email = instance.email
         email_address_obj.save()
+    if created and instance.is_superuser:
+        EmailAddress.objects.create(user=instance, primary=True, verified=True)
