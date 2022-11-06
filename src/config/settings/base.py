@@ -116,6 +116,7 @@ ACCOUNT_CONFIRM_EMAIL_ON_GET = True
 OLD_PASSWORD_FIELD_ENABLED = True
 LOGOUT_ON_PASSWORD_CHANGE = True
 ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
+ACCOUNT_ADAPTER = 'apps.extensions.authentication.CustomAllAuthAdaptor'
 
 EMAIL_HOST = config('EMAIL_HOST')
 EMAIL_PORT = config('EMAIL_PORT', cast=int)
@@ -148,6 +149,7 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.MultiPartRenderer',
     ]
 }
+REST_AUTH_PW_RESET_USE_SITES_DOMAIN = True
 
 CALLBACK_URL_GITHUB = config('CALLBACK_URL_GOOGLE')
 CALLBACK_URL_GOOGLE = config('CALLBACK_URL_GITHUB')
