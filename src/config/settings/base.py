@@ -149,6 +149,11 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.MultiPartRenderer',
     ]
 }
+
+REST_AUTH_SERIALIZERS = {
+    'PASSWORD_RESET_SERIALIZER': 'apps.extensions.authentication.CustomPasswordResetSerializer',
+}
+
 REST_AUTH_PW_RESET_USE_SITES_DOMAIN = True
 
 CALLBACK_URL_GITHUB = config('CALLBACK_URL_GOOGLE')
