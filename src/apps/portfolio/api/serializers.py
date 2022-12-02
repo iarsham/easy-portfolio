@@ -14,6 +14,18 @@ class AboutMeProfileSerializer(serializers.ModelSerializer):
         fields = ("id", "image")
 
 
+class AboutMeUpdateResumeSerializer(serializers.ModelSerializer):
+    resume = serializers.FileField()
+
+    class Meta:
+        model = AboutMe
+        fields = ("resume",)
+
+
+class AboutMeUpdateProfileSerializer(serializers.Serializer):
+    profile = serializers.FileField()
+
+
 class AboutMeSerializer(serializers.ModelSerializer):
     profile_images = serializers.SerializerMethodField('get_images')
     full_name = serializers.ReadOnlyField()
@@ -31,19 +43,6 @@ class AboutMeSerializer(serializers.ModelSerializer):
             many=True,
             context={"request": self.context['request']}
         ).data
-
-    def update(self, instance, validated_data):
-        uploaded_images = self.context['request'].FILES
-        images_obj_list = []
-        for image in uploaded_images.getlist('file'):
-            images_obj_list.append(
-                AboutMeProfile(
-                    about_me=instance,
-                    image=image
-                )
-            )
-        AboutMeProfile.objects.bulk_create(images_obj_list)
-        return super().update(instance, validated_data)
 
 
 class EducationSerializer(serializers.ModelSerializer):
@@ -101,32 +100,9 @@ class SkillSerializer(serializers.ModelSerializer):
             raise ValidationError(_("This skill already exists"))
         return data
 
-    def create(self, validated_data):
-        new_skill_obj = Skill.objects.create(**validated_data)
-        uploaded_files = self.context['request'].FILES
-        certificate_obj_list = []
-        for certificate in uploaded_files.getlist('file'):
-            certificate_obj_list.append(
-                SkillCertificate(
-                    skill=new_skill_obj,
-                    certificate=certificate
-                )
-            )
-        SkillCertificate.objects.bulk_create(certificate_obj_list)
-        return new_skill_obj
 
-    def update(self, instance, validated_data):
-        uploaded_files = self.context['request'].FILES
-        certificate_obj_list = []
-        for certificate in uploaded_files.getlist('file'):
-            certificate_obj_list.append(
-                SkillCertificate(
-                    skill=instance,
-                    certificate=certificate
-                )
-            )
-        SkillCertificate.objects.bulk_create(certificate_obj_list)
-        return super().update(instance, validated_data)
+class SkillCreateCertificateSerializer(serializers.Serializer):
+    certificate = serializers.FileField()
 
 
 class LanguageCertificateSerializer(serializers.ModelSerializer):
@@ -158,32 +134,8 @@ class LanguageSerializer(serializers.ModelSerializer):
             context={"request": self.context['request']}
         ).data
 
-    def create(self, validated_data):
-        new_language_obj = Language.objects.create(**validated_data)
-        uploaded_files = self.context['request'].FILES
-        certificate_obj_list = []
-        for certificate in uploaded_files.getlist('file'):
-            certificate_obj_list.append(
-                LanguageCertificate(
-                    language=new_language_obj,
-                    certificate=certificate
-                )
-            )
-        LanguageCertificate.objects.bulk_create(certificate_obj_list)
-        return new_language_obj
-
-    def update(self, instance, validated_data):
-        uploaded_files = self.context['request'].FILES
-        certificate_obj_list = []
-        for certificate in uploaded_files.getlist('file'):
-            certificate_obj_list.append(
-                LanguageCertificate(
-                    language=instance,
-                    certificate=certificate
-                )
-            )
-        LanguageCertificate.objects.bulk_create(certificate_obj_list)
-        return super().update(instance, validated_data)
+class LanguageCertificateCreateSerializer(serializers.Serializer):
+    certificate = serializers.FileField()
 
 
 class AchievementCertificateSerializer(serializers.ModelSerializer):
@@ -215,32 +167,9 @@ class AchievementSerializer(serializers.ModelSerializer):
             raise ValidationError(_("This achievement already exists"))
         return data
 
-    def create(self, validated_data):
-        new_achievement_obj = Achievement.objects.create(**validated_data)
-        uploaded_files = self.context['request'].FILES
-        certificate_obj_list = []
-        for certificate in uploaded_files.getlist('file'):
-            certificate_obj_list.append(
-                AchievementCertificate(
-                    achievement=new_achievement_obj,
-                    certificate=certificate
-                )
-            )
-        AchievementCertificate.objects.bulk_create(certificate_obj_list)
-        return new_achievement_obj
 
-    def update(self, instance, validated_data):
-        uploaded_files = self.context['request'].FILES
-        certificate_obj_list = []
-        for certificate in uploaded_files.getlist('file'):
-            certificate_obj_list.append(
-                AchievementCertificate(
-                    achievement=instance,
-                    certificate=certificate
-                )
-            )
-        AchievementCertificate.objects.bulk_create(certificate_obj_list)
-        return super().update(instance, validated_data)
+class AchievementCertificateCreateSerializer(serializers.Serializer):
+    certificate = serializers.FileField()
 
 
 class ContactMeSerializer(serializers.ModelSerializer):

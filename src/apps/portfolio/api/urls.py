@@ -2,10 +2,13 @@ from django.urls import path
 from rest_framework.routers import DefaultRouter
 from apps.portfolio.api.views import (
     AboutMeGetUpdateApiView, AboutMeDeleteProfileApiView,
-    EducationGetUpdateApiView, SkillCRUDApiView, SkillDeleteCertificateApiView,
-    LanguageCRUDApiView, LanguageDeleteCertificateApiView,
-    AchievementCRUDApiView, AchievementDeleteCertificateApiView,
-    EmploymentChoicesApiView, ProficiencyChoicesApiView, SendContactMeApiView
+    AboutMeUpdateResumeApiView, AboutMeUpdateProfileApiView,
+    EducationGetUpdateApiView, SkillCRUDApiView, SkillCreateCertificateApiView,
+    SkillDeleteCertificateApiView, LanguageCRUDApiView,
+    LanguageDeleteCertificateApiView, AchievementCRUDApiView,
+    AchievementDeleteCertificateApiView, EmploymentChoicesApiView,
+    ProficiencyChoicesApiView, SendContactMeApiView,
+    LanguageCertificateCreateApiView, AchievementCertificateCreateApiView
 )
 
 router = DefaultRouter()
@@ -22,9 +25,13 @@ urlpatterns = [
         name='about_me'
     ),
     path(
-        'education/',
-        EducationGetUpdateApiView.as_view(),
-        name='education'
+        'aboutme/resume/',
+        AboutMeUpdateResumeApiView.as_view(),
+        name='about_me_resume'
+    ), path(
+        'aboutme/profile/',
+        AboutMeUpdateProfileApiView.as_view(),
+        name='aboutme_update_profile'
     ),
     path(
         'aboutme/profile/<int:pk>/',
@@ -32,14 +39,34 @@ urlpatterns = [
         name='aboutme_delete_profile'
     ),
     path(
+        'education/',
+        EducationGetUpdateApiView.as_view(),
+        name='education'
+    ),
+    path(
+        'skill/certificate/create/<int:pk>/',
+        SkillCreateCertificateApiView.as_view(),
+        name='skill_create_certificate'
+    ),
+    path(
         'skill/certificate/<int:pk>/',
         SkillDeleteCertificateApiView.as_view(),
         name='skill_delete_certificate'
     ),
     path(
+        'language/certificate/create/<int:pk>/',
+        LanguageCertificateCreateApiView.as_view(),
+        name='language_create_certificate'
+    ),
+    path(
         'language/certificate/<int:pk>/',
         LanguageDeleteCertificateApiView.as_view(),
         name='language_delete_certificate'
+    ),
+    path(
+        'achievement/certificate/create/<int:pk>/',
+        AchievementCertificateCreateApiView.as_view(),
+        name='achievement_create_certificate'
     ),
     path(
         'achievement/certificate/<int:pk>/',

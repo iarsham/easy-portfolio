@@ -3,8 +3,8 @@ from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
 from dateutil.relativedelta import relativedelta
 from apps.experience.models import (
-    Experience, Project, ProjectAssets, PersonalProject,
-    PersonalProjectAssets, ReferencePeople, Blog
+    Experience, Project, ProjectAssets,
+    PersonalProject, ReferencePeople, Blog
 )
 
 
@@ -89,22 +89,9 @@ class ProjectSerializer(serializers.ModelSerializer):
             context={"request": self.context['request']}
         ).data
 
-    def create(self, validated_data):
-        new_obj = Project.objects.create(**validated_data)
-        uploaded_files = self.context['request'].FILES
-        assets_obj_list = []
-        for file in uploaded_files.getlist('file'):
-            assets_obj_list.append(ProjectAssets(project=new_obj, file=file))
-        ProjectAssets.objects.bulk_create(assets_obj_list)
-        return new_obj
 
-    def update(self, instance, validated_data):
-        uploaded_files = self.context['request'].FILES
-        assets_obj_list = []
-        for file in uploaded_files.getlist('file'):
-            assets_obj_list.append(ProjectAssets(project=instance, file=file))
-        ProjectAssets.objects.bulk_create(assets_obj_list)
-        return super().update(instance, validated_data)
+class ProjectAssetCreateSerializer(serializers.Serializer):
+    asset = serializers.FileField()
 
 
 class ReferencePeopleSerializer(serializers.ModelSerializer):
@@ -122,6 +109,12 @@ class ReferencePeopleSerializer(serializers.ModelSerializer):
                 'someone with this full_name and email exists.'
             )
         return attrs
+
+
+class ReferencePeopleImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ReferencePeople
+        fields = ('image',)
 
 
 class PersonalProjectAssetsSerializer(serializers.ModelSerializer):
@@ -154,26 +147,9 @@ class PersonalProjectSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('project with this name exists.')
         return attrs
 
-    def create(self, validated_data):
-        new_obj = PersonalProject.objects.create(**validated_data)
-        uploaded_files = self.context['request'].FILES
-        assets_obj_list = []
-        for file in uploaded_files.getlist('file'):
-            assets_obj_list.append(
-                PersonalProjectAssets(personal_project=new_obj, file=file)
-            )
-        PersonalProjectAssets.objects.bulk_create(assets_obj_list)
-        return new_obj
 
-    def update(self, instance, validated_data):
-        uploaded_files = self.context['request'].FILES
-        assets_obj_list = []
-        for file in uploaded_files.getlist('file'):
-            assets_obj_list.append(
-                PersonalProjectAssets(personal_project=instance, file=file)
-            )
-        PersonalProjectAssets.objects.bulk_create(assets_obj_list)
-        return super().update(instance, validated_data)
+class PersonalProjectAssetSerializer(serializers.Serializer):
+    asset = serializers.FileField()
 
 
 class BlogSerializer(serializers.ModelSerializer):
