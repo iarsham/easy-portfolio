@@ -1,0 +1,80 @@
+version: "3.8"
+
+x-base:
+  &base
+  env_file:
+    - ../src/.env
+  networks:
+    - Portfolio-Backend
+  restart: always
+
+x-django-app:
+  &main-django
+  <<: *base
+  build:
+    context: .
+    dockerfile: Dockerfile
+  volumes:
+    - type: bind
+      source: ../src/
+      target: /code/
+
+services:
+  db:
+    <<: *base
+    image: postgres:latest
+    container_name: db
+    volumes:
+      - ../src/db_data:/var/lib/postgresql/data
+    expose:
+      - 5432
+
+
+  backend:
+    <<: *main-django
+    container_name: backend
+    expose:
+      - 8000
+    depends_on:
+      - db
+
+  nginx:
+    build:
+      context: nginx/
+      dockerfile: Dockerfile
+    container_name: nginx
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - type: bind
+        source: ../src/volumes/static/
+        target: /code/volumes/static
+      - type: bind
+        source: ../src/volumes/media/
+        target: /code/volumes/media
+    networks:
+      - Portfolio-Backend
+    depends_on:
+      - db
+      - backend
+
+  redis:
+    <<: *base
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+  celery:
+    <<: *main-django
+    container_name: celery
+    command: celery -A config worker -l info
+    depends_on:
+      - backend
+      - redis
+
+volumes:
+  db_data:
+
+networks:
+  Portfolio-Backend:

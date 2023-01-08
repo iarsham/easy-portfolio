@@ -1,0 +1,8 @@
+src/**/*__pycache__
+src/**/*.pyc
+src/db.sqlite3
+src/.flake8
+venv/
+.idea/
+.gitignore
+README.md
